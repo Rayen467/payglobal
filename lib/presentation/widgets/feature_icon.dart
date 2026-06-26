@@ -44,4 +44,7 @@ class DkgIcons {
   static const IconData smartphone = Icons.smartphone_rounded;
   static const IconData bell = Icons.notifications_outlined;
   static const IconData info = Icons.info_outline_rounded;
+  static const IconData lock = Icons.lock_outline_rounded;
+  static const IconData eye = Icons.visibility_outlined;
+  static const IconData eyeOff = Icons.visibility_off_outlined;
 }

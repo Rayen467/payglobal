@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontFamily: 'PlusJakartaSans',
                             fontSize: 27,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.ink,
+                            color: AppColors.pureWhite,
                             letterSpacing: -0.4,
                           )),
                       const SizedBox(height: 6),
@@ -147,10 +147,10 @@ class _LoginPageState extends State<LoginPage> {
                             child: Container(
                               height: 54,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: AppColors.line, width: 1.5),
-                                boxShadow: AppColors.shadowSoft,
+                                border: Border.all(color: AppColors.line, width: 2.5),
+                                boxShadow: const [BoxShadow(color: Color(0x15000000), offset: Offset(3, 3))],
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

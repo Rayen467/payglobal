@@ -6,10 +6,10 @@ class AppField extends StatelessWidget {
   final String placeholder;
   final String value;
   final ValueChanged<String> onChanged;
-  final bool obscure;
-  final TextInputType? inputType;
+  final bool obscureText;
+  final TextInputType? keyboardType;
   final Widget? prefixIcon;
-  final Widget? suffix;
+  final Widget? suffixIcon;
   final String? error;
 
   const AppField({
@@ -18,10 +18,10 @@ class AppField extends StatelessWidget {
     this.placeholder = '',
     required this.value,
     required this.onChanged,
-    this.obscure = false,
-    this.inputType,
+    this.obscureText = false,
+    this.keyboardType,
     this.prefixIcon,
-    this.suffix,
+    this.suffixIcon,
     this.error,
   });
 
@@ -60,8 +60,8 @@ class AppField extends StatelessWidget {
               TextEditingValue(text: value, selection: TextSelection.collapsed(offset: value.length)),
             ),
             onChanged: onChanged,
-            obscureText: obscure,
-            keyboardType: inputType,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
             style: const TextStyle(
               fontFamily: 'PlusJakartaSans',
               fontSize: 15,
@@ -86,7 +86,7 @@ class AppField extends StatelessWidget {
                     )
                   : null,
               prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-              suffixIcon: suffix,
+              suffixIcon: suffixIcon,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               border: InputBorder.none,
               enabledBorder: InputBorder.none,
