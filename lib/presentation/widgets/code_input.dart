@@ -62,8 +62,6 @@ class _CodeInputState extends State<CodeInput> {
     return GestureDetector(
       onTap: () {
         if (_focusNode.hasFocus) {
-          // FocusNode masih fokus walau keyboard sudah ditutup user,
-          // requestFocus() jadi no-op → paksa tampilkan keyboard lagi.
           SystemChannels.textInput.invokeMethod('TextInput.show');
         } else {
           _focusNode.requestFocus();
@@ -104,7 +102,7 @@ class _CodeInputState extends State<CodeInput> {
                     height: boxSize > 40 ? 56 : boxSize + 10,
                     margin: const EdgeInsets.symmetric(horizontal: horizontalMargin),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(13),
                       border: Border.all(
                         color: widget.hasError
@@ -114,11 +112,11 @@ class _CodeInputState extends State<CodeInput> {
                                 : filled
                                     ? AppColors.primaryBorder
                                     : AppColors.line,
-                        width: 1.6,
+                        width: 2.5,
                       ),
                       boxShadow: active
-                          ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.1), blurRadius: 0, spreadRadius: 4)]
-                          : [],
+                          ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.15), blurRadius: 0, spreadRadius: 4)]
+                          : const [BoxShadow(color: Color(0x10000000), offset: Offset(2, 2))],
                     ),
                     child: Center(
                       child: filled
