@@ -1,122 +1,110 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 
-enum AppButtonVariant { primary, dark, soft, ghost, outline, outlineWhite, white, danger, success }
-enum AppButtonSize { lg, md, sm }
+enum AppButtonVariant { primary, soft, outline }
 
-class AppButton extends StatelessWidget {
+class AppButton extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
-  final AppButtonSize size;
+  final bool isLoading;
   final bool fullWidth;
   final Widget? icon;
-  final bool isLoading;
 
   const AppButton({
     super.key,
     required this.label,
     this.onPressed,
     this.variant = AppButtonVariant.primary,
-    this.size = AppButtonSize.lg,
+    this.isLoading = false,
     this.fullWidth = true,
     this.icon,
-    this.isLoading = false,
   });
 
   @override
+  State<AppButton> createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    final (height, fontSize, radius, px) = switch (size) {
-      AppButtonSize.lg => (54.0, 16.0, 16.0, 20.0),
-      AppButtonSize.md => (46.0, 15.0, 14.0, 16.0),
-      AppButtonSize.sm => (38.0, 13.5, 11.0, 13.0),
-    };
+    final disabled = widget.onPressed == null || widget.isLoading;
 
-    final (bg, fg, shadow, border) = _resolveStyle();
-    final disabled = onPressed == null;
+    // Neo-Brutalism color sets per variant
+    Color bg, fg, borderColor;
+    List<BoxShadow> shadow;
+    switch (widget.variant) {
+      case AppButtonVariant.soft:
+        bg = AppColors.primarySurface;
+        fg = AppColors.primary;
+        borderColor = AppColors.primaryBorder;
+        shadow = [const BoxShadow(color: Color(0x2000D9B5), offset: Offset(3, 3))];
+      case AppButtonVariant.outline:
+        bg = Colors.transparent;
+        fg = AppColors.ink;
+        borderColor = AppColors.line;
+        shadow = [const BoxShadow(color: Color(0x15000000), offset: Offset(3, 3))];
+      default:
+        bg = AppColors.primary;
+        fg = AppColors.bg;
+        borderColor = AppColors.primaryDark;
+        shadow = AppColors.shadowPrimary;
+    }
 
-    return Opacity(
-      opacity: disabled ? 0.5 : 1.0,
-      child: GestureDetector(
-        onTap: disabled || isLoading ? null : onPressed,
+    if (disabled) {
+      bg = bg.withValues(alpha: 0.4);
+      shadow = [];
+    }
+
+    return GestureDetector(
+      onTapDown: disabled ? null : (_) => setState(() => _pressed = true),
+      onTapUp: disabled ? null : (_) { setState(() => _pressed = false); widget.onPressed?.call(); },
+      onTapCancel: disabled ? null : () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.96 : 1.0,
+        duration: const Duration(milliseconds: 100),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          height: height,
-          width: fullWidth ? double.infinity : null,
-          padding: EdgeInsets.symmetric(horizontal: px),
+          duration: const Duration(milliseconds: 150),
+          width: widget.fullWidth ? double.infinity : null,
+          height: 54,
+          padding: widget.fullWidth ? null : const EdgeInsets.symmetric(horizontal: 28),
           decoration: BoxDecoration(
-            gradient: variant == AppButtonVariant.primary ? AppColors.primaryGradient : null,
-            color: variant != AppButtonVariant.primary ? bg : null,
-            borderRadius: BorderRadius.circular(radius),
-            boxShadow: shadow,
-            border: border,
+            color: bg,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: borderColor, width: 2.5),
+            boxShadow: _pressed ? [] : shadow,
           ),
-          child: Row(
-            mainAxisSize: fullWidth ? MainAxisSize.max : MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (isLoading) ...[
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.4,
-                    valueColor: AlwaysStoppedAnimation(fg),
+          child: Center(
+            child: widget.isLoading
+                ? SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation(fg),
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.icon != null) ...[widget.icon!, const SizedBox(width: 8)],
+                      Text(
+                        widget.label,
+                        style: TextStyle(
+                          fontFamily: 'PlusJakartaSans',
+                          fontSize: 15.5,
+                          fontWeight: FontWeight.w700,
+                          color: fg,
+                          letterSpacing: 0.1,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 9),
-              ] else if (icon != null) ...[
-                icon!,
-                const SizedBox(width: 9),
-              ],
-              Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'PlusJakartaSans',
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w700,
-                  color: fg,
-                  letterSpacing: 0.1,
-                ),
-              ),
-            ],
           ),
         ),
       ),
     );
-  }
-
-  (Color, Color, List<BoxShadow>, Border?) _resolveStyle() {
-    return switch (variant) {
-      AppButtonVariant.primary => (
-          AppColors.primary,
-          Colors.white,
-          AppColors.shadowPrimary,
-          null,
-        ),
-      AppButtonVariant.dark => (AppColors.ink, Colors.white, [], null),
-      AppButtonVariant.soft => (AppColors.primarySurface, AppColors.primary, [], null),
-      AppButtonVariant.ghost => (Colors.transparent, AppColors.slate600, [], null),
-      AppButtonVariant.outline => (
-          Colors.white,
-          AppColors.ink,
-          [],
-          Border.all(color: AppColors.line, width: 1.5),
-        ),
-      AppButtonVariant.outlineWhite => (
-          Colors.transparent,
-          Colors.white,
-          [],
-          Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
-        ),
-      AppButtonVariant.white => (
-          Colors.white,
-          AppColors.primary,
-          [BoxShadow(color: Colors.black.withValues(alpha: 0.14), blurRadius: 20, offset: const Offset(0, 8))],
-          null,
-        ),
-      AppButtonVariant.danger => (AppColors.red, Colors.white, [], null),
-      AppButtonVariant.success => (AppColors.green, Colors.white, [], null),
-    };
   }
 }
