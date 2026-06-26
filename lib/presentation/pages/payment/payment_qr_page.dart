@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
@@ -17,6 +18,44 @@ class _PaymentQrPageState extends State<PaymentQrPage> {
   bool _detected = false;
   bool _sheetShown = false;
   final _controller = MobileScannerController();
+  bool _torchOn = false;
+
+  Future<void> _toggleFlashlight() async {
+    try {
+      await _controller.toggleTorch();
+      setState(() {
+        _torchOn = !_torchOn;
+      });
+    } catch (e) {
+      debugPrint('Error toggling torch: $e');
+    }
+  }
+
+  Future<void> _scanFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final file = await picker.pickImage(source: ImageSource.gallery);
+      if (file != null) {
+        final success = await _controller.analyzeImage(file.path);
+        if (success) {
+          setState(() {
+            _detected = true;
+          });
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tidak dapat menemukan QR Code dari gambar.'),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Error scanning from gallery: $e');
+    }
+  }
 
   // Mock merchant data for demo
   final _merchant = {'name': 'Kantin Teknik UI', 'sub': 'NMID: ID2024088123 · QRIS', 'amount': 27000.0};
@@ -69,6 +108,7 @@ class _PaymentQrPageState extends State<PaymentQrPage> {
               icon: const Icon(Icons.close_rounded, color: Colors.white, size: 24),
               onPressed: () => context.go('/home'),
             ),
+            const SizedBox(width: 48), // Spacer to balance the 2 buttons on the right (96px total each side)
             const Expanded(
               child: Text('Scan QRIS',
                   textAlign: TextAlign.center,
@@ -79,7 +119,18 @@ class _PaymentQrPageState extends State<PaymentQrPage> {
                     fontSize: 16,
                   )),
             ),
-            const SizedBox(width: 48),
+            IconButton(
+              icon: const Icon(Icons.add_photo_alternate_outlined, color: Colors.white, size: 22),
+              onPressed: _scanFromGallery,
+            ),
+            IconButton(
+              icon: Icon(
+                _torchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+                color: _torchOn ? AppColors.amber : Colors.white,
+                size: 22,
+              ),
+              onPressed: _toggleFlashlight,
+            ),
           ],
         ),
       ),
