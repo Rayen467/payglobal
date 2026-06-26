@@ -21,16 +21,27 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Premium frosted glass color mapping for light vs dark mode
+    final cardColor = color == const Color(0x0EFFFFFF)
+        ? (isDark ? const Color(0x0EFFFFFF) : const Color(0xA0FFFFFF))
+        : color;
+
+    final cardBorderColor = borderColor == const Color(0x15FFFFFF)
+        ? (isDark ? const Color(0x15FFFFFF) : const Color(0x1A000000))
+        : borderColor;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
           decoration: BoxDecoration(
-            color: color,
+            color: cardColor,
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: borderColor,
+              color: cardBorderColor,
               width: 1.2,
             ),
           ),
