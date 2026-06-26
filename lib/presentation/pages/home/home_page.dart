@@ -7,9 +7,11 @@ import '../../../core/utils/currency_formatter.dart';
 import '../../../domain/entities/transaction_entity.dart';
 import '../../blocs/account/account_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
+import '../../../core/services/notification_service.dart';
 import '../../widgets/app_avatar.dart';
 import '../../widgets/app_logo.dart';
 import '../../widgets/feature_icon.dart';
+import '../../widgets/glass_card.dart';
 import '../../widgets/transaction_row.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     context.read<AccountBloc>().add(AccountLoadRequested());
     context.read<AuthBloc>().add(AuthCheckRequested());
+    NotificationService.init(context);
   }
 
   @override
@@ -170,12 +173,8 @@ class _HomePageState extends State<HomePage> {
       {'icon': Icons.south_rounded, 'label': 'Tarik', 'tone': 'amber', 'route': '/topup'},
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: AppColors.shadowCard,
-      ),
+    return GlassCard(
+      borderRadius: 22,
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
       child: Column(
         children: [
@@ -288,13 +287,9 @@ class _HomePageState extends State<HomePage> {
     return Row(
       children: [
         Expanded(
-          child: Container(
+          child: GlassCard(
+            borderRadius: 16,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: AppColors.shadowSoft,
-            ),
             child: Row(
               children: [
                 const FeatureIcon(
@@ -323,13 +318,9 @@ class _HomePageState extends State<HomePage> {
         ),
         const SizedBox(width: 10),
         Expanded(
-          child: Container(
+          child: GlassCard(
+            borderRadius: 16,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: AppColors.shadowSoft,
-            ),
             child: Row(
               children: [
                 const FeatureIcon(
@@ -371,12 +362,8 @@ class _HomePageState extends State<HomePage> {
       {'icon': Icons.favorite_outline_rounded, 'label': 'Donasi', 'tone': 'amber'},
       {'icon': Icons.more_horiz_rounded, 'label': 'Lainnya', 'tone': 'slate'},
     ];
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: AppColors.shadowSoft,
-      ),
+    return GlassCard(
+      borderRadius: 20,
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
       child: GridView.count(
         crossAxisCount: 4,
@@ -504,12 +491,8 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         const SizedBox(height: 13),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: AppColors.shadowSoft,
-          ),
+        GlassCard(
+          borderRadius: 20,
           child: txns.isEmpty
               ? const Padding(
                   padding: EdgeInsets.all(20),
