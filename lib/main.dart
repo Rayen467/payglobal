@@ -53,17 +53,26 @@ class DompetKampusApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sync isDarkMode dynamically with the system's brightness context
-    final brightness = MediaQuery.platformBrightnessOf(context);
-    AppColors.isDarkMode = brightness == Brightness.dark;
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: AppTheme.themeModeNotifier,
+      builder: (context, themeMode, _) {
+        // Sync isDarkMode dynamically with the active theme mode
+        if (themeMode == ThemeMode.system) {
+          final brightness = MediaQuery.platformBrightnessOf(context);
+          AppColors.isDarkMode = brightness == Brightness.dark;
+        } else {
+          AppColors.isDarkMode = themeMode == ThemeMode.dark;
+        }
 
-    return MaterialApp.router(
-      title: 'Dompet Kampus Global',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: AppRouter.router,
+        return MaterialApp.router(
+          title: 'Dompet Kampus Global',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: themeMode,
+          routerConfig: AppRouter.router,
+        );
+      },
     );
   }
 }
