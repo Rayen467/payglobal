@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/app_avatar.dart';
 import '../../widgets/app_badge.dart';
@@ -10,6 +11,184 @@ import '../../widgets/glass_card.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
+
+  void _showSettingsBottomSheet(BuildContext context, String name, String email) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return ValueListenableBuilder<ThemeMode>(
+          valueListenable: AppTheme.themeModeNotifier,
+          builder: (context, themeMode, _) {
+            final isLight = themeMode == ThemeMode.light;
+
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(26),
+                  topRight: Radius.circular(26),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 26),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 42,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: AppColors.line,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    'Pengaturan Aplikasi',
+                    style: TextStyle(
+                      fontFamily: 'PlusJakartaSans',
+                      fontSize: 16.5,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.ink,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.bg,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.line, width: 1),
+                    ),
+                    child: Row(
+                      children: [
+                        AppAvatar(
+                          name: name,
+                          size: 46,
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.ink,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                email,
+                                style: const TextStyle(
+                                  fontFamily: 'PlusJakartaSans',
+                                  fontSize: 12,
+                                  color: AppColors.slate400,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.between,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              isLight ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                              color: isLight ? AppColors.amber : AppColors.primary,
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              'Mode Terang',
+                              style: TextStyle(
+                                fontFamily: 'PlusJakartaSans',
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.ink,
+                              ),
+                            ),
+                          ],
+                        ),
+                        _Toggle(
+                          value: isLight,
+                          onChanged: (val) {
+                            AppTheme.themeModeNotifier.value =
+                                val ? ThemeMode.light : ThemeMode.dark;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.line, width: 1.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: Text(
+                            'Tutup',
+                            style: TextStyle(
+                              fontFamily: 'PlusJakartaSans',
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            context.read<AuthBloc>().add(AuthLogoutRequested());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.red,
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Colors.transparent),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: const Text(
+                            'Logout',
+                            style: TextStyle(
+                              fontFamily: 'PlusJakartaSans',
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +333,16 @@ class AccountPage extends StatelessWidget {
                             const Divider(height: 1, indent: 56, color: AppColors.line2),
                             _Row(icon: Icons.account_balance_outlined, tone: 'green', title: 'Rekening & kartu tersimpan', onTap: () {}),
                             const Divider(height: 1, indent: 56, color: AppColors.line2),
-                            _Row(icon: Icons.settings_outlined, tone: 'slate', title: 'Pengaturan aplikasi', onTap: () {}),
+                            _Row(
+                              icon: Icons.settings_outlined,
+                              tone: 'slate',
+                              title: 'Pengaturan aplikasi',
+                              onTap: () => _showSettingsBottomSheet(
+                                context,
+                                user?.name ?? 'Pengguna',
+                                user?.email ?? '',
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -262,27 +450,40 @@ class _Row extends StatelessWidget {
 }
 
 class _Toggle extends StatefulWidget {
+  final bool? value;
+  final ValueChanged<bool>? onChanged;
+
+  const _Toggle({this.value, this.onChanged});
+
   @override
   State<_Toggle> createState() => _ToggleState();
 }
 
 class _ToggleState extends State<_Toggle> {
-  bool _on = true;
+  bool _localOn = true;
+
   @override
   Widget build(BuildContext context) {
+    final isOn = widget.value ?? _localOn;
     return GestureDetector(
-      onTap: () => setState(() => _on = !_on),
+      onTap: () {
+        if (widget.onChanged != null) {
+          widget.onChanged!(!isOn);
+        } else {
+          setState(() => _localOn = !_localOn);
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         width: 44,
         height: 26,
         decoration: BoxDecoration(
-          color: _on ? AppColors.green : AppColors.line,
+          color: isOn ? AppColors.green : AppColors.line,
           borderRadius: BorderRadius.circular(20),
         ),
         child: AnimatedAlign(
           duration: const Duration(milliseconds: 180),
-          alignment: _on ? Alignment.centerRight : Alignment.centerLeft,
+          alignment: isOn ? Alignment.centerRight : Alignment.centerLeft,
           child: Container(
             margin: const EdgeInsets.all(3),
             width: 20,
