@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "878857373866",
+    "project_id": "week3lanjutan",
+    "storage_bucket": "week3lanjutan.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878857373866:android:7b83a2453f78647f22e8d3",
+        "android_client_info": {
+          "package_name": "com.example.payglobal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878857373866-snjlheshmqj14pikua1qppgdh4vgnddf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqCs574t92H_pRy3L59nWCEXqCfu_WkI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878857373866-snjlheshmqj14pikua1qppgdh4vgnddf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878857373866:android:e0284e5497685a8222e8d3",
+        "android_client_info": {
+          "package_name": "globalpay.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878857373866-snjlheshmqj14pikua1qppgdh4vgnddf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqCs574t92H_pRy3L59nWCEXqCfu_WkI0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878857373866-snjlheshmqj14pikua1qppgdh4vgnddf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
