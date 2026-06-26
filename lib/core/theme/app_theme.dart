@@ -3,15 +3,17 @@ import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
 class AppTheme {
-  static ThemeData get light {
+  static ThemeData _buildTheme(Brightness brightness) {
     const fontFamily = 'PlusJakartaSans';
+    final isDark = brightness == Brightness.dark;
+
     return ThemeData(
       useMaterial3: true,
       fontFamily: fontFamily,
-      brightness: Brightness.dark,
+      brightness: brightness,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
-        brightness: Brightness.dark,
+        brightness: brightness,
         primary: AppColors.primary,
         onPrimary: AppColors.bg,
         secondary: AppColors.green,
@@ -20,21 +22,21 @@ class AppTheme {
         error: AppColors.red,
       ),
       scaffoldBackgroundColor: AppColors.bg,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF0F1520),
+      appBarTheme: AppBarTheme(
+        backgroundColor: isDark ? const Color(0xFF0F1520) : Colors.white,
         elevation: 0,
         scrolledUnderElevation: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          statusBarBrightness: Brightness.dark,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
         ),
-        iconTheme: IconThemeData(color: AppColors.ink),
-        titleTextStyle: TextStyle(
+        iconTheme: const IconThemeData(color: AppColors.ink),
+        titleTextStyle: const TextStyle(
           fontFamily: fontFamily,
           fontSize: 17,
           fontWeight: FontWeight.w700,
-          color: AppColors.pureWhite,
+          color: AppColors.ink,
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -77,5 +79,21 @@ class AppTheme {
         thickness: 1,
       ),
     );
+  }
+
+  static ThemeData get light {
+    final prev = AppColors.isDarkMode;
+    AppColors.isDarkMode = false;
+    final theme = _buildTheme(Brightness.light);
+    AppColors.isDarkMode = prev;
+    return theme;
+  }
+
+  static ThemeData get dark {
+    final prev = AppColors.isDarkMode;
+    AppColors.isDarkMode = true;
+    final theme = _buildTheme(Brightness.dark);
+    AppColors.isDarkMode = prev;
+    return theme;
   }
 }
