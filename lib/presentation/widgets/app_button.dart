@@ -32,25 +32,67 @@ class _AppButtonState extends State<AppButton> {
   Widget build(BuildContext context) {
     final disabled = widget.onPressed == null || widget.isLoading;
 
-    // Neo-Brutalism color sets per variant
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     Color bg, fg, borderColor;
     List<BoxShadow> shadow;
-    switch (widget.variant) {
-      case AppButtonVariant.soft:
-        bg = AppColors.primarySurface;
-        fg = AppColors.primary;
-        borderColor = AppColors.primaryBorder;
-        shadow = [const BoxShadow(color: Color(0x2000D9B5), offset: Offset(3, 3))];
-      case AppButtonVariant.outline:
-        bg = Colors.transparent;
-        fg = AppColors.ink;
-        borderColor = AppColors.line;
-        shadow = [const BoxShadow(color: Color(0x15000000), offset: Offset(3, 3))];
-      default:
-        bg = AppColors.primary;
-        fg = AppColors.bg;
-        borderColor = AppColors.primaryDark;
-        shadow = AppColors.shadowPrimary;
+    double borderWidth;
+
+    if (isDark) {
+      borderWidth = 2.5;
+      switch (widget.variant) {
+        case AppButtonVariant.soft:
+          bg = AppColors.primarySurface;
+          fg = AppColors.primary;
+          borderColor = AppColors.primaryBorder;
+          shadow = [const BoxShadow(color: Color(0x2000D9B5), offset: Offset(3, 3))];
+          break;
+        case AppButtonVariant.outline:
+          bg = Colors.transparent;
+          fg = AppColors.ink;
+          borderColor = AppColors.line;
+          shadow = [const BoxShadow(color: Color(0x15000000), offset: Offset(3, 3))];
+          break;
+        default:
+          bg = AppColors.primary;
+          fg = AppColors.bg;
+          borderColor = AppColors.primaryDark;
+          shadow = AppColors.shadowPrimary;
+          break;
+      }
+    } else {
+      // Light Mode Neumorphism
+      borderWidth = 1.0;
+      switch (widget.variant) {
+        case AppButtonVariant.soft:
+          bg = const Color(0xFFEDF2F7);
+          fg = AppColors.primaryDark;
+          borderColor = Colors.transparent;
+          borderWidth = 0.0;
+          shadow = [
+            const BoxShadow(color: Colors.white, offset: Offset(-4, -4), blurRadius: 8),
+            BoxShadow(color: const Color(0xFFA6B4C9).withValues(alpha: 0.4), offset: const Offset(4, 4), blurRadius: 8),
+          ];
+          break;
+        case AppButtonVariant.outline:
+          bg = Colors.transparent;
+          fg = AppColors.ink;
+          borderColor = AppColors.line.withValues(alpha: 0.5);
+          shadow = [
+            BoxShadow(color: Colors.white.withValues(alpha: 0.5), offset: const Offset(-2, -2), blurRadius: 4),
+            BoxShadow(color: const Color(0xFFA6B4C9).withValues(alpha: 0.15), offset: const Offset(2, 2), blurRadius: 4),
+          ];
+          break;
+        default: // primary
+          bg = AppColors.primary;
+          fg = const Color(0xFF0F172A);
+          borderColor = Colors.transparent;
+          borderWidth = 0.0;
+          shadow = [
+            BoxShadow(color: Colors.white.withValues(alpha: 0.45), offset: const Offset(-4, -4), blurRadius: 8),
+            BoxShadow(color: AppColors.primaryDark.withValues(alpha: 0.4), offset: const Offset(4, 4), blurRadius: 8),
+          ];
+          break;
+      }
     }
 
     if (disabled) {
@@ -73,7 +115,7 @@ class _AppButtonState extends State<AppButton> {
           decoration: BoxDecoration(
             color: bg,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: borderColor, width: 2.5),
+            border: borderWidth > 0 ? Border.all(color: borderColor, width: borderWidth) : null,
             boxShadow: _pressed ? [] : shadow,
           ),
           child: Center(
