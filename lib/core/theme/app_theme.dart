@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'app_colors.dart';
 
 class AppTheme {
+  static final ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier(ThemeMode.dark);
+
   static ThemeData _buildTheme(Brightness brightness) {
     const fontFamily = 'PlusJakartaSans';
     final isDark = brightness == Brightness.dark;
