@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontFamily: 'PlusJakartaSans',
                             fontSize: 27,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.pureWhite,
+                            color: AppColors.ink,
                             letterSpacing: -0.4,
                           )),
                       const SizedBox(height: 6),
