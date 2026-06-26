@@ -1,109 +1,114 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
-import 'feature_icon.dart';
 
 class AppTabBar extends StatelessWidget {
-  final String active;
-  final ValueChanged<String> onTab;
+  final int index;
+  final ValueChanged<int> onTap;
   final VoidCallback? onScan;
 
-  const AppTabBar({
-    super.key,
-    required this.active,
-    required this.onTab,
-    this.onScan,
-  });
+  const AppTabBar({super.key, required this.index, required this.onTap, this.onScan});
 
   @override
   Widget build(BuildContext context) {
+    final items = [
+      _TabItem(Icons.home_outlined, Icons.home_rounded, 'Beranda'),
+      _TabItem(Icons.swap_horiz_rounded, Icons.swap_horiz_rounded, 'Riwayat'),
+      _TabItem(Icons.qr_code_scanner_rounded, Icons.qr_code_scanner_rounded, 'Scan'),
+      _TabItem(Icons.local_offer_outlined, Icons.local_offer_rounded, 'Promo'),
+      _TabItem(Icons.person_outline_rounded, Icons.person_rounded, 'Akun'),
+    ];
+
     return Container(
-      height: 64 + MediaQuery.of(context).padding.bottom,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF0F1520),
+        border: const Border(top: BorderSide(color: AppColors.line, width: 1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
         ],
       ),
-      child: SafeArea(
-        top: false,
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+      child: SizedBox(
+        height: 62,
         child: Row(
-          children: [
-            _TabItem(icon: DkgIcons.home, label: 'Home', tabKey: 'home', active: active, onTap: onTab),
-            _TabItem(icon: DkgIcons.history, label: 'Riwayat', tabKey: 'history', active: active, onTap: onTab),
-            // Center scan button
-            Expanded(
-              child: Center(
+          children: items.asMap().entries.map((e) {
+            final i = e.key;
+            final item = e.value;
+            final active = i == index;
+
+            // Scan button — center with Aurora gradient
+            if (i == 2) {
+              return Expanded(
                 child: GestureDetector(
                   onTap: onScan,
-                  child: Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      gradient: AppColors.primaryGradient,
-                      shape: BoxShape.circle,
-                      boxShadow: AppColors.shadowPrimary,
+                  child: Center(
+                    child: Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppColors.primary, Color(0xFF2C8BFF)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.primaryDark, width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.35),
+                            blurRadius: 0,
+                            offset: const Offset(3, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.qr_code_scanner_rounded, size: 26, color: AppColors.bg),
+                      ),
                     ),
-                    child: const Icon(DkgIcons.scan, color: Colors.white, size: 26),
                   ),
                 ),
+              );
+            }
+
+            return Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => onTap(i > 2 ? i - 1 : i),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      active ? item.activeIcon : item.icon,
+                      size: 24,
+                      color: active ? AppColors.primary : AppColors.slate500,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item.label,
+                      style: TextStyle(
+                        fontFamily: 'PlusJakartaSans',
+                        fontSize: 11,
+                        fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                        color: active ? AppColors.primary : AppColors.slate500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            _TabItem(icon: DkgIcons.gift, label: 'Promo', tabKey: 'promo', active: active, onTap: onTab),
-            _TabItem(icon: DkgIcons.user, label: 'Akun', tabKey: 'akun', active: active, onTap: onTab),
-          ],
+            );
+          }).toList(),
         ),
       ),
     );
   }
 }
 
-class _TabItem extends StatelessWidget {
+class _TabItem {
   final IconData icon;
+  final IconData activeIcon;
   final String label;
-  final String tabKey;
-  final String active;
-  final ValueChanged<String> onTap;
-
-  const _TabItem({
-    required this.icon,
-    required this.label,
-    required this.tabKey,
-    required this.active,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isActive = active == tabKey;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onTap(tabKey),
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              size: 24,
-              color: isActive ? AppColors.primary : AppColors.slate400,
-            ),
-            const SizedBox(height: 3),
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'PlusJakartaSans',
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppColors.primary : AppColors.slate400,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  _TabItem(this.icon, this.activeIcon, this.label);
 }
