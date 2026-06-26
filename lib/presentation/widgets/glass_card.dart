@@ -23,6 +23,36 @@ class GlassCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    if (!isDark) {
+      final cardColor = color == const Color(0x0EFFFFFF) ? const Color(0xFFEDF2F7) : color;
+      return Container(
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.6),
+            width: 1.0,
+          ),
+          boxShadow: [
+            const BoxShadow(
+              color: Colors.white,
+              offset: Offset(-5, -5),
+              blurRadius: 10,
+              spreadRadius: 1,
+            ),
+            BoxShadow(
+              color: const Color(0xFFA6B4C9).withValues(alpha: 0.45),
+              offset: const Offset(5, 5),
+              blurRadius: 10,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        padding: padding,
+        child: child,
+      );
+    }
+
     // Premium frosted glass color mapping for light vs dark mode
     final cardColor = color == const Color(0x0EFFFFFF)
         ? (isDark ? const Color(0x0EFFFFFF) : const Color(0xA0FFFFFF))
