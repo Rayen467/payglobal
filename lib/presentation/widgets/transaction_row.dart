@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
+import '../../core/utils/date_formatter.dart';
 import '../../domain/entities/transaction_entity.dart';
 import 'feature_icon.dart';
 
@@ -44,7 +45,7 @@ class TransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      txn.dateFormatted,
+                      DateFormatter.format(txn.createdAt),
                       style: const TextStyle(
                         fontFamily: 'PlusJakartaSans',
                         fontSize: 12.5,

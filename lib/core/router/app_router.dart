@@ -94,12 +94,18 @@ class AppRouter {
               return _withAccount(Scaffold(
                 body: child,
                 bottomNavigationBar: AppTabBar(
-                  active: tab,
-                  onTab: (t) {
+                  index: tab == 'home'
+                      ? 0
+                      : tab == 'history'
+                          ? 1
+                          : tab == 'promo'
+                              ? 3
+                              : 4,
+                  onTap: (t) {
                     switch (t) {
-                      case 'history': context.go('/history'); break;
-                      case 'promo': context.go('/promo'); break;
-                      case 'akun': context.go('/akun'); break;
+                      case 1: context.go('/history'); break;
+                      case 2: context.go('/promo'); break;
+                      case 3: context.go('/akun'); break;
                       default: context.go('/home');
                     }
                   },

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'core/router/app_router.dart';
 import 'core/services/deeplink_service.dart';
 import 'core/theme/app_theme.dart';
@@ -14,6 +15,9 @@ late final DeeplinkService _deeplinkService;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize date formatting for Indonesia locale
+  await initializeDateFormatting('id_ID', null);
 
   Bloc.observer = const AppBlocObserver();
 
