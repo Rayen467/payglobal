@@ -32,6 +32,21 @@ import '../../presentation/widgets/app_tab_bar.dart';
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
+  static Page<void> _fadeTransitionPage(Widget child, LocalKey key) {
+    return CustomTransitionPage<void>(
+      key: key,
+      child: child,
+      transitionDuration: const Duration(milliseconds: 200),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    );
+  }
+
   // static final (bukan getter) agar GoRouter dibuat sekali saja —
   // instance yang sama dipakai oleh MaterialApp.router dan DeeplinkService.
   static final GoRouter router = GoRouter(
@@ -113,12 +128,24 @@ class AppRouter {
                 ),
               ));
             },
-            routes: [
-              GoRoute(path: '/home', builder: (_, __) => const HomePage()),
-              GoRoute(path: '/history', builder: (_, __) => const HistoryPage()),
-              GoRoute(path: '/promo', builder: (_, __) => const PromoPage()),
-              GoRoute(path: '/akun', builder: (_, __) => const AccountPage()),
-            ],
+             routes: [
+               GoRoute(
+                 path: '/home',
+                 pageBuilder: (context, state) => _fadeTransitionPage(const HomePage(), state.pageKey),
+               ),
+               GoRoute(
+                 path: '/history',
+                 pageBuilder: (context, state) => _fadeTransitionPage(const HistoryPage(), state.pageKey),
+               ),
+               GoRoute(
+                 path: '/promo',
+                 pageBuilder: (context, state) => _fadeTransitionPage(const PromoPage(), state.pageKey),
+               ),
+               GoRoute(
+                 path: '/akun',
+                 pageBuilder: (context, state) => _fadeTransitionPage(const AccountPage(), state.pageKey),
+               ),
+             ],
           ),
           // Payment flows (no tab bar)
           GoRoute(path: '/topup', builder: (_, __) => _withPayment(const TopUpPage())),
