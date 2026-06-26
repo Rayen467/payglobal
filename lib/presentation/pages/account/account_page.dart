@@ -21,7 +21,9 @@ class AccountPage extends StatelessWidget {
         return ValueListenableBuilder<ThemeMode>(
           valueListenable: AppTheme.themeModeNotifier,
           builder: (context, themeMode, _) {
-            final isLight = themeMode == ThemeMode.light;
+            final isLight = themeMode == ThemeMode.light ||
+                (themeMode == ThemeMode.system &&
+                    Theme.of(context).brightness == Brightness.light);
 
             return Container(
               decoration: BoxDecoration(
