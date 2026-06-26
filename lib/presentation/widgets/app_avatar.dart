@@ -1,57 +1,45 @@
 import 'package:flutter/material.dart';
+import '../../core/theme/app_colors.dart';
 
 class AppAvatar extends StatelessWidget {
   final String name;
   final double size;
-  final Color? bg;
-  final String? imageUrl;
 
-  const AppAvatar({
-    super.key,
-    required this.name,
-    this.size = 44,
-    this.bg,
-    this.imageUrl,
-  });
+  const AppAvatar({super.key, required this.name, this.size = 48});
+
+  static const _neonPalette = [
+    Color(0xFF00D9B5),
+    Color(0xFF2C8BFF),
+    Color(0xFFFF3D8C),
+    Color(0xFF9B6DFF),
+    Color(0xFFFFB020),
+    Color(0xFF22C97A),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final palette = [
-      const Color(0xFF0B63E5),
-      const Color(0xFF16A571),
-      const Color(0xFF7A5AF8),
-      const Color(0xFFF5A623),
-      const Color(0xFFE5484D),
-      const Color(0xFF0EA5E9),
-    ];
-    final auto = palette[(name.isNotEmpty ? name.codeUnitAt(0) : 0) % palette.length];
-    final initials = name
-        .split(' ')
-        .take(2)
-        .map((s) => s.isNotEmpty ? s[0].toUpperCase() : '')
-        .join();
-
+    final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+    final colorIdx = name.codeUnits.fold(0, (a, b) => a + b) % _neonPalette.length;
+    final color = _neonPalette[colorIdx];
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: bg ?? auto,
-        shape: BoxShape.circle,
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(size * 0.32),
+        border: Border.all(color: color.withValues(alpha: 0.4), width: 2),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: imageUrl != null
-          ? Image.network(imageUrl!, fit: BoxFit.cover)
-          : Center(
-              child: Text(
-                initials,
-                style: TextStyle(
-                  fontFamily: 'PlusJakartaSans',
-                  fontSize: size * 0.36,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+      child: Center(
+        child: Text(
+          initial,
+          style: TextStyle(
+            fontFamily: 'PlusJakartaSans',
+            fontSize: size * 0.38,
+            fontWeight: FontWeight.w800,
+            color: color,
+          ),
+        ),
+      ),
     );
   }
 }
