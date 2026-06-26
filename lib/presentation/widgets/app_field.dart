@@ -28,6 +28,8 @@ class AppField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasError = error != null && error!.isNotEmpty;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -44,17 +46,38 @@ class AppField extends StatelessWidget {
           const SizedBox(height: 8),
         ],
         Container(
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: hasError ? AppColors.red : AppColors.line,
-              width: 2.5,
-            ),
-            boxShadow: const [
-              BoxShadow(color: Color(0x10000000), offset: Offset(3, 3)),
-            ],
-          ),
+          decoration: isDark
+              ? BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: hasError ? AppColors.red : AppColors.line,
+                    width: 2.5,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(color: Color(0x10000000), offset: Offset(3, 3)),
+                  ],
+                )
+              : BoxDecoration(
+                  color: const Color(0xFFEDF2F7),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(
+                    color: hasError ? AppColors.red : AppColors.line.withValues(alpha: 0.5),
+                    width: 1.0,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFA6B4C9).withValues(alpha: 0.25),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                    const BoxShadow(
+                      color: Colors.white,
+                      offset: Offset(-2, -2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
           child: TextField(
             controller: TextEditingController.fromValue(
               TextEditingValue(text: value, selection: TextSelection.collapsed(offset: value.length)),
