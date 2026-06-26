@@ -6,6 +6,7 @@ import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/app_avatar.dart';
 import '../../widgets/app_badge.dart';
 import '../../widgets/feature_icon.dart';
+import '../../widgets/glass_card.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
@@ -102,12 +103,8 @@ class AccountPage extends StatelessWidget {
                               color: AppColors.slate400,
                             )),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: AppColors.shadowSoft,
-                        ),
+                      GlassCard(
+                        borderRadius: 18,
                         child: Column(
                           children: [
                             _Row(
@@ -149,12 +146,8 @@ class AccountPage extends StatelessWidget {
                               color: AppColors.slate400,
                             )),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: AppColors.shadowSoft,
-                        ),
+                      GlassCard(
+                        borderRadius: 18,
                         child: Column(
                           children: [
                             _Row(icon: Icons.person_outline_rounded, tone: 'blue', title: 'Data pribadi', onTap: () {}),
@@ -168,14 +161,9 @@ class AccountPage extends StatelessWidget {
                       const SizedBox(height: 18),
                       GestureDetector(
                         onTap: () => context.read<AuthBloc>().add(AuthLogoutRequested()),
-                        child: Container(
-                          width: double.infinity,
+                        child: GlassCard(
+                          borderRadius: 16,
                           padding: const EdgeInsets.symmetric(vertical: 15),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: AppColors.shadowSoft,
-                          ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
