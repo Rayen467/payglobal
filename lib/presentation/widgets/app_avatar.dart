@@ -4,8 +4,9 @@ import '../../core/theme/app_colors.dart';
 class AppAvatar extends StatelessWidget {
   final String name;
   final double size;
+  final Color? bg;
 
-  const AppAvatar({super.key, required this.name, this.size = 48});
+  const AppAvatar({super.key, required this.name, this.size = 48, this.bg});
 
   static const _neonPalette = [
     Color(0xFF00D9B5),
@@ -25,9 +26,9 @@ class AppAvatar extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
+        color: bg ?? color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(size * 0.32),
-        border: Border.all(color: color.withValues(alpha: 0.4), width: 2),
+        border: Border.all(color: bg ?? color.withValues(alpha: 0.4), width: 2),
       ),
       child: Center(
         child: Text(
