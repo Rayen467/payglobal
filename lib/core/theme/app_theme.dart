@@ -74,14 +74,14 @@ class AppTheme {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark ? lineColor : lineColor.withOpacity(0.5),
+            color: isDark ? lineColor : lineColor.withValues(alpha: 0.5),
             width: isDark ? 2.5 : 1.0,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(
-            color: isDark ? lineColor : lineColor.withOpacity(0.5),
+            color: isDark ? lineColor : lineColor.withValues(alpha: 0.5),
             width: isDark ? 2.5 : 1.0,
           ),
         ),
