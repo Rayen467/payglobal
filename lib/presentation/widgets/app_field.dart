@@ -1,155 +1,111 @@
 import 'package:flutter/material.dart';
-
 import '../../core/theme/app_colors.dart';
 
-class AppField extends StatefulWidget {
+class AppField extends StatelessWidget {
   final String? label;
-  final String? placeholder;
+  final String placeholder;
   final String value;
-  final ValueChanged<String>? onChanged;
-  final TextInputType? keyboardType;
-  final bool obscureText;
+  final ValueChanged<String> onChanged;
+  final bool obscure;
+  final TextInputType? inputType;
   final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final bool autoFocus;
-  final int? maxLength;
-  final TextInputAction? textInputAction;
-  final VoidCallback? onEditingComplete;
+  final Widget? suffix;
+  final String? error;
 
   const AppField({
     super.key,
     this.label,
-    this.placeholder,
+    this.placeholder = '',
     required this.value,
-    this.onChanged,
-    this.keyboardType,
-    this.obscureText = false,
+    required this.onChanged,
+    this.obscure = false,
+    this.inputType,
     this.prefixIcon,
-    this.suffixIcon,
-    this.autoFocus = false,
-    this.maxLength,
-    this.textInputAction,
-    this.onEditingComplete,
+    this.suffix,
+    this.error,
   });
 
   @override
-  State<AppField> createState() => _AppFieldState();
-}
-
-class _AppFieldState extends State<AppField> {
-  late final TextEditingController _ctrl;
-  bool _focused = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = TextEditingController(text: widget.value);
-  }
-
-  @override
-  void didUpdateWidget(AppField old) {
-    super.didUpdateWidget(old);
-    if (old.value != widget.value && _ctrl.text != widget.value) {
-      _ctrl.value = _ctrl.value.copyWith(text: widget.value);
-    }
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final hasError = error != null && error!.isNotEmpty;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.label != null) ...[
+        if (label != null) ...[
           Text(
-            widget.label!,
+            label!,
             style: const TextStyle(
               fontFamily: 'PlusJakartaSans',
               fontSize: 13.5,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: AppColors.slate600,
             ),
           ),
           const SizedBox(height: 8),
         ],
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          height: 54,
+        Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: _focused ? AppColors.primary : AppColors.line,
-              width: 1.0,
+              color: hasError ? AppColors.red : AppColors.line,
+              width: 2.5,
             ),
-            boxShadow: _focused
-                ? [
-                    BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.1), blurRadius: 0, spreadRadius: 4)
-                  ]
-                : [],
-          ),
-          child: Row(
-            children: [
-              if (widget.prefixIcon != null) ...[
-                const SizedBox(width: 14),
-                ColorFiltered(
-                  colorFilter: ColorFilter.mode(
-                    _focused ? AppColors.primary : AppColors.slate400,
-                    BlendMode.srcIn,
-                  ),
-                  child: widget.prefixIcon!,
-                ),
-                const SizedBox(width: 10),
-              ] else
-                const SizedBox(width: 14),
-              Expanded(
-                child: Focus(
-                  onFocusChange: (f) => setState(() => _focused = f),
-                  child: TextField(
-                    controller: _ctrl,
-                    onChanged: widget.onChanged,
-                    keyboardType: widget.keyboardType,
-                    obscureText: widget.obscureText,
-                    autofocus: widget.autoFocus,
-                    maxLength: widget.maxLength,
-                    textInputAction: widget.textInputAction,
-                    onEditingComplete: widget.onEditingComplete,
-                    style: const TextStyle(
-                      fontFamily: 'PlusJakartaSans',
-                      fontSize: 15.5,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.ink,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: widget.placeholder,
-                      hintStyle: const TextStyle(
-                        fontFamily: 'PlusJakartaSans',
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.slate300,
-                      ),
-                      border: InputBorder.none,
-                      isDense: true,
-                      counterText: '',
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                  ),
-                ),
-              ),
-              if (widget.suffixIcon != null) ...[
-                widget.suffixIcon!,
-                const SizedBox(width: 4),
-              ],
+            boxShadow: const [
+              BoxShadow(color: Color(0x10000000), offset: Offset(3, 3)),
             ],
           ),
+          child: TextField(
+            controller: TextEditingController.fromValue(
+              TextEditingValue(text: value, selection: TextSelection.collapsed(offset: value.length)),
+            ),
+            onChanged: onChanged,
+            obscureText: obscure,
+            keyboardType: inputType,
+            style: const TextStyle(
+              fontFamily: 'PlusJakartaSans',
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: AppColors.ink,
+            ),
+            decoration: InputDecoration(
+              hintText: placeholder,
+              hintStyle: const TextStyle(
+                fontFamily: 'PlusJakartaSans',
+                fontSize: 14.5,
+                fontWeight: FontWeight.w500,
+                color: AppColors.slate400,
+              ),
+              prefixIcon: prefixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 14, right: 10),
+                      child: IconTheme(
+                        data: const IconThemeData(color: AppColors.slate500, size: 20),
+                        child: prefixIcon!,
+                      ),
+                    )
+                  : null,
+              prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+              suffixIcon: suffix,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+          ),
         ),
+        if (hasError) ...[
+          const SizedBox(height: 6),
+          Text(
+            error!,
+            style: const TextStyle(
+              fontFamily: 'PlusJakartaSans',
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: AppColors.red,
+            ),
+          ),
+        ],
       ],
     );
   }
