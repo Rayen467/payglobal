@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                       // Gradient header
                       Container(
                         width: double.infinity,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           gradient: AppColors.primaryGradient,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(28),
