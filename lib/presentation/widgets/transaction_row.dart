@@ -13,18 +13,19 @@ class TransactionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCredit = txn.isCredit;
-    final (icon, tone) = _resolveIcon(txn.description);
-
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        if (divider)
-          const Divider(height: 1, thickness: 1, color: AppColors.line2, indent: 16),
+        if (divider) const Divider(height: 1, indent: 16, color: AppColors.line2),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           child: Row(
             children: [
-              FeatureIcon(icon: icon, tone: tone, size: 44, iconSize: 21),
+              FeatureIcon(
+                icon: isCredit ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+                tone: isCredit ? 'green' : 'red',
+                size: 42,
+                iconSize: 20,
+              ),
               const SizedBox(width: 13),
               Expanded(
                 child: Column(
@@ -43,24 +44,23 @@ class TransactionRow extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      _formatDate(txn.createdAt),
+                      txn.dateFormatted,
                       style: const TextStyle(
                         fontFamily: 'PlusJakartaSans',
                         fontSize: 12.5,
-                        color: AppColors.slate400,
+                        color: AppColors.slate500,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
               Text(
                 '${isCredit ? '+' : '-'}${CurrencyFormatter.format(txn.amount)}',
                 style: TextStyle(
                   fontFamily: 'PlusJakartaSans',
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
-                  color: isCredit ? AppColors.green : AppColors.ink,
+                  color: isCredit ? AppColors.green : AppColors.red,
                 ),
               ),
             ],
@@ -68,31 +68,5 @@ class TransactionRow extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  (IconData, String) _resolveIcon(String desc) {
-    final d = desc.toLowerCase();
-    if (d.contains('top up') || d.contains('topup')) return (DkgIcons.topup, 'blue');
-    if (d.contains('transfer')) return (DkgIcons.send, 'green');
-    if (d.contains('qris') || d.contains('bayar')) return (DkgIcons.qris, 'violet');
-    if (d.contains('pulsa')) return (DkgIcons.pulsa, 'blue');
-    if (d.contains('tokobel') || d.contains('toko')) return (DkgIcons.store, 'amber');
-    return (DkgIcons.wallet, 'slate');
-  }
-
-  String _formatDate(DateTime dt) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final date = DateTime(dt.year, dt.month, dt.day);
-    final time = '${dt.hour.toString().padLeft(2, '0')}.${dt.minute.toString().padLeft(2, '0')}';
-    if (date == today) return 'Hari ini, $time';
-    if (date == yesterday) return 'Kemarin, $time';
-    return '${dt.day} ${_month(dt.month)}, $time';
-  }
-
-  String _month(int m) {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
-    return months[m - 1];
   }
 }
