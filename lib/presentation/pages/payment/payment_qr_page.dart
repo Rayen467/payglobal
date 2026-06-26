@@ -36,8 +36,8 @@ class _PaymentQrPageState extends State<PaymentQrPage> {
       final picker = ImagePicker();
       final file = await picker.pickImage(source: ImageSource.gallery);
       if (file != null) {
-        final success = await _controller.analyzeImage(file.path);
-        if (success) {
+        final capture = await _controller.analyzeImage(file.path);
+        if (capture != null && capture.barcodes.isNotEmpty) {
           setState(() {
             _detected = true;
           });
