@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../domain/entities/transaction_entity.dart';
 import '../../blocs/account/account_bloc.dart';
+import '../../widgets/glass_card.dart';
 import '../../widgets/transaction_row.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _HistoryPageState extends State<HistoryPage> {
       body: Column(
         children: [
           Container(
-            color: Colors.white,
+            color: AppColors.bg,
             padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 12, 20, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,12 +111,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                         color: AppColors.slate400,
                                       )),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: AppColors.shadowSoft,
-                                  ),
+                                GlassCard(
+                                  borderRadius: 20,
                                   child: Column(
                                     children: txns
                                         .asMap()

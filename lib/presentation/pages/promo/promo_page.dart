@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../widgets/app_badge.dart';
 import '../../widgets/feature_icon.dart';
+import '../../widgets/glass_card.dart';
 
 class PromoPage extends StatelessWidget {
   const PromoPage({super.key});
@@ -20,7 +21,7 @@ class PromoPage extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Colors.white,
+            color: AppColors.bg,
             padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 12, 20, 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,13 +92,10 @@ class PromoPage extends StatelessWidget {
                 const SizedBox(height: 18),
                 ...promos.map((p) => Container(
                       margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: AppColors.shadowSoft,
-                      ),
-                      padding: const EdgeInsets.all(14),
-                      child: Row(
+                      child: GlassCard(
+                        borderRadius: 18,
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
                         children: [
                           FeatureIcon(icon: p['icon'] as IconData, tone: p['tone'] as String, size: 50, iconSize: 24),
                           const SizedBox(width: 13),
@@ -125,7 +123,7 @@ class PromoPage extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )),
+                    ))),
               ],
             ),
           ),
